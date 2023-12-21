@@ -3,6 +3,7 @@ import Jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
 import Auth from "../models/auth.model";
+import { IUser, Login } from "../interfaces/interface";
 
 dotenv.config();
 
@@ -11,7 +12,7 @@ class ServiceAuth {
 
     async getLogin(params: any) {
         try {
-            const result = await Auth.getLogin(params.username) as any;
+            const result = await Auth.getLogin(params) as any;
 
             if (!result.dataValues) {
                 return {
@@ -42,7 +43,7 @@ class ServiceAuth {
         };
     };
 
-    async generateToken(data: any) {
+    async generateToken(data: IUser) {
         try {
             const token = Jwt.sign(data, process.env.JWT_KEY as string);
             return token;

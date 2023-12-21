@@ -3,14 +3,14 @@ import bcrypt from "bcrypt";
 
 import ServiceUsers from "../services/users.service";
 import ServiceAuth from "../services/auth.service";
-import { create } from "domain";
+import { IUser, UserController } from "../interfaces/interface";
 
-class ControllerUsers {
+class ControllerUsers implements UserController {
     constructor() { }
 
     async getUsers(req: Request, res: Response) {
         try {
-            const users = await ServiceUsers.getUsers() as any;
+            const users = await ServiceUsers.getUsers() as IUser[];
 
             if (users.length === 0) {
                 return res.status(404).json({
@@ -31,7 +31,7 @@ class ControllerUsers {
 
     async getUser(req: Request, res: Response) {
         try {
-            const result = await ServiceUsers.getUser(req.params.id) as any;
+            const result = await ServiceUsers.getUser(req.params.id) as IUser[];
 
             if (result.length === 0) {
                 return res.status(404).json({
@@ -54,7 +54,7 @@ class ControllerUsers {
         try {
             const headers = req.headers;
             const token = headers.authorization as string;
-            const decoded = (await ServiceAuth.verifyToken(token)) as any;
+            const decoded = (await ServiceAuth.verifyToken(token)) as IUser;
 
             res.status(200).json({
                 data: decoded,
@@ -74,12 +74,12 @@ class ControllerUsers {
             email: email,
             password: hashedPassword,
             role: "user",
-            created_at: new Date(),
-            updated_at: new Date()
-        };
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        } as IUser;
 
         try {
-            const createdUser = await ServiceUsers.createUser(userData) as any;
+            const createdUser = await ServiceUsers.createUser(userData) as IUser;
             res.status(201).json({
                 message: "Success Create Data!",
                 data: createdUser
@@ -93,17 +93,17 @@ class ControllerUsers {
 
     async createAdmin(req: Request, res: Response) {
         const password: string = await bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
-        const params: any = {
+        const params = {
             username: req.body.username,
             email: req.body.email,
             password: password,
             role: "admin",
-            created_at: new Date(),
-            updated_at: new Date()
-        };
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        } as IUser;
 
         try {
-            const createdAdmin = await ServiceUsers.createUser(params);
+            const createdAdmin = await ServiceUsers.createUser(params) as IUser;
             return res.status(201).json({
                 message: "Success Create Data!",
                 data: createdAdmin
@@ -123,10 +123,10 @@ class ControllerUsers {
             email,
             password: hashedPassword,
             updated_at: new Date().toISOString()
-        };
+        } as IUser;
 
         try {
-            const result = await ServiceUsers.updateUser(req.params.id, userData);
+            const result = await ServiceUsers.updateUser(req.params.id, userData) as IUser;
             return res.status(200).json({
                 message: "Success Update Data!",
                 data: result
@@ -140,7 +140,7 @@ class ControllerUsers {
 
     async deleteUser(req: Request, res: Response) {
         try {
-            const result = await ServiceUsers.deleteUser(req.params.id) as any;
+            const result = await ServiceUsers.deleteUser(req.params.id) as IUser[];
             if (result.length === 0) {
                 return res.status(404).json({
                     message: "User Not found!"
