@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import ControllerUser from "../controllers/users.controller";
+import Auth from "../middlewares/Auth";
 
 
 class ApiUsers {
@@ -10,10 +11,10 @@ class ApiUsers {
     };
 
     public routes() {
-        this.router.get("/", ControllerUser.getUsers);
-        this.router.get("/:id", ControllerUser.getUser);
-        this.router.put("/:id", ControllerUser.updateUser);
-        this.router.delete("/:id", ControllerUser.deleteUser);
+        this.router.get("/", Auth.Auth, ControllerUser.getUsers);
+        this.router.get("/:id", Auth.Auth, ControllerUser.getUser);
+        this.router.put("/:id", Auth.Auth, ControllerUser.updateUser);
+        this.router.delete("/:id", Auth.Auth, ControllerUser.deleteUser);
 
         return this.router;
     }
