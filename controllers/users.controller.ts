@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 
 import ServiceUsers from "../services/users.service";
+import ServiceAuth from "../services/auth.service";
 
 class ControllerUsers {
     constructor() { }
@@ -24,8 +25,8 @@ class ControllerUsers {
             return res.status(500).json({
                 message: (error as Error).message
             });
-        }
-    }
+        };
+    };
 
     async getUser(req: Request, res: Response) {
         try {
@@ -45,8 +46,24 @@ class ControllerUsers {
             return res.status(500).json({
                 message: (error as Error).message
             });
-        }
-    }
+        };
+    };
+
+    async getCurrentUser(req: Request, res: Response) {
+        try {
+            const headers = req.headers;
+            const token = headers.authorization as string;
+            const decoded = (await ServiceAuth.verifyToken(token)) as any;
+
+            res.status(200).json({
+                data: decoded,
+            });
+        } catch (error) {
+            return res.status(500).json({
+                message: (error as Error).message
+            });
+        };
+    };
 
     async createUser(req: Request, res: Response) {
         const { username, email, password } = req.body;
@@ -71,6 +88,28 @@ class ControllerUsers {
         };
     };
 
+    async createAdmin(req: Request, res: Response) {
+        const password: string = await bcrypt.hash(req.body.password, 10);
+        const params: any = {
+            username: req.body.username,
+            email: req.body.email,
+            password: password,
+            role: "admin",
+        };
+
+        try {
+            const createdAdmin = await ServiceUsers.createUser(params);
+            return res.status(201).json({
+                message: "Success Create Data!",
+                data: createdAdmin
+            });
+        } catch (error) {
+            return res.status(500).json({
+                message: (error as Error).message
+            });
+        }
+    }
+
     async updateUser(req: Request, res: Response) {
         const { username, email, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -83,12 +122,12 @@ class ControllerUsers {
 
         try {
             const result = await ServiceUsers.updateUser(req.params.id, userData);
-            res.status(200).json({
+            return res.status(200).json({
                 message: "Success Update Data!",
                 data: result
             });
         } catch (error) {
-            res.status(500).json({
+            return res.status(500).json({
                 message: (error as Error).message
             });
         };
