@@ -93,4 +93,24 @@ class ControllerUsers {
             });
         };
     };
+
+    async deleteUser(req: Request, res: Response) {
+        try {
+            const result = await ServiceUsers.deleteUser(req.params.id) as any;
+            if (result.length === 0) {
+                return res.status(404).json({
+                    message: "User Not found!"
+                });
+            };
+
+            res.status(200).json({
+                message: "Success Delete Data!",
+                data: result
+            });
+        } catch (error) {
+            res.status(500).json({
+                message: (error as Error).message
+            });
+        };
+    }
 };
