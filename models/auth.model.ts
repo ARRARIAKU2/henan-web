@@ -1,7 +1,9 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../database/sequelize";
 
-class Users {
+import { AuthModel, Login } from "../interfaces/interface";
+
+class Users implements AuthModel<Login> {
     private users;
     constructor() {
         this.users = sequelize.define(
@@ -38,7 +40,7 @@ class Users {
         );
     };
 
-    async getLogin(username: any) {
+    async getLogin(username: Login) {
         try {
             const result = await this.users.findOne({ where: { username: username } });
             return result;

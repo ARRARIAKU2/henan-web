@@ -1,5 +1,7 @@
 import user from "../models/users.model";
 
+import { IUser } from "../interfaces/interface";
+
 class ServiceUsers {
     constructor() { }
 
@@ -21,7 +23,7 @@ class ServiceUsers {
         };
     };
 
-    async createUser(data: any) {
+    async createUser(data: IUser) {
         try {
             const result = await user.createUser(data);
             return result;
@@ -30,7 +32,7 @@ class ServiceUsers {
         };
     };
 
-    async updateUser(id: string, data: any) {
+    async updateUser(id: string, data: IUser) {
         try {
             const result = await user.updateUser(id, data);
             return result;

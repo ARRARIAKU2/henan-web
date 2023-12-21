@@ -1,7 +1,9 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../database/sequelize";
 
-class Users {
+import { IUser, UserModel } from "../interfaces/interface";
+
+class Users implements UserModel<IUser> {
     private users;
     constructor() {
         this.users = sequelize.define(
@@ -63,9 +65,9 @@ class Users {
         } catch (error) {
             return error;
         };
-    };
+    }
 
-    async updateUser(id: string, data: any) {
+    async updateUser(id: string, data: IUser) {
         try {
             const result = await this.users.update(data, { where: { id: id } });
             return result;
