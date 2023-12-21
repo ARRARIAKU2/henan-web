@@ -38,7 +38,7 @@ class Users {
         );
     };
 
-    async getLogin(username: string) {
+    async getLogin(username: any) {
         try {
             const result = await this.users.findOne({ where: { username: username } });
             return result;

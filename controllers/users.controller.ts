@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 
 import ServiceUsers from "../services/users.service";
 import ServiceAuth from "../services/auth.service";
+import { create } from "domain";
 
 class ControllerUsers {
     constructor() { }
@@ -67,16 +68,18 @@ class ControllerUsers {
 
     async createUser(req: Request, res: Response) {
         const { username, email, password } = req.body;
-        const hashedPassword = bcrypt.hash(password, 10);
+        const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
         const userData = {
-            username,
-            email,
+            username: username,
+            email: email,
             password: hashedPassword,
-            role: "user"
+            role: "user",
+            created_at: new Date(),
+            updated_at: new Date()
         };
 
         try {
-            const createdUser = await ServiceUsers.createUser(userData);
+            const createdUser = await ServiceUsers.createUser(userData) as any;
             res.status(201).json({
                 message: "Success Create Data!",
                 data: createdUser
@@ -89,12 +92,14 @@ class ControllerUsers {
     };
 
     async createAdmin(req: Request, res: Response) {
-        const password: string = await bcrypt.hash(req.body.password, 10);
+        const password: string = await bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
         const params: any = {
             username: req.body.username,
             email: req.body.email,
             password: password,
             role: "admin",
+            created_at: new Date(),
+            updated_at: new Date()
         };
 
         try {
