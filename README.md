@@ -62,7 +62,8 @@ npm run dev
 
 - [Database Structure](#database-structure)
 - [API Structure](#api-structure)
-- [API Request Response](#api-request-response)
+- [API Users Request Response](#api-users-request-response)
+- [API Auth Request Response](#api-auth-request-response)
 
 ## Database Structure
 
