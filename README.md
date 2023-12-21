@@ -31,6 +31,24 @@ Make sure to install the dependencies:
 npm install
 ```
 
+### Run Migrations
+
+Make sure run migration for Table users
+
+```
+cd /database/
+npx sequelize-cli db:migrate
+```
+
+### Run Seeds
+
+Make sure run seed for Table users
+
+```
+cd /database/
+npx sequelize-cli db:seed:all
+```
+
 ### Development Server
 
 Start the development server on [http://localhost:8000](http://localhost:8000)
