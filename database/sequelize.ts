@@ -19,4 +19,5 @@ class Database {
     }
 }
 
-export default new Database().dbSequelize;
+const db = new Database();
+export default db.dbSequelize;

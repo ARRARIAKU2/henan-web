@@ -11,9 +11,9 @@ class ServiceAuth {
 
     async getLogin(params: any) {
         try {
-            const result = await Auth.getLogin(params) as any;
+            const result = await Auth.getLogin(params.username) as any;
 
-            if (!result) {
+            if (!result.dataValues) {
                 return {
                     message: "User Not Found",
                     status: 404,
@@ -35,7 +35,7 @@ class ServiceAuth {
                 message: "Success Login",
                 status: 200,
                 success: true,
-                data: result
+                data: result.dataValues
             };
         } catch (error) {
             return error;
@@ -44,7 +44,7 @@ class ServiceAuth {
 
     async generateToken(data: any) {
         try {
-            const token = Jwt.sign(data, process.env.SECRET_KEY as string);
+            const token = Jwt.sign(data, process.env.JWT_KEY as string);
             return token;
         } catch (error) {
             return error;
@@ -53,7 +53,7 @@ class ServiceAuth {
 
     async verifyToken(token: string) {
         try {
-            const result = Jwt.verify(token, process.env.SECRET_KEY as string);
+            const result = Jwt.verify(token, process.env.JWT_KEY as string);
             return result;
         } catch (error) {
             return error;

@@ -6,10 +6,13 @@ class ControllerAuth {
     constructor() { }
 
     async getLogin(req: Request, res: Response) {
-        const { username, password } = req.body;
+        const params: any = {
+            username: req.body.username,
+            password: req.body.password
+        }
 
         try {
-            const result = await ServiceAuth.getLogin({ username, password }) as any;
+            const result = await ServiceAuth.getLogin(params) as any;
 
             if (!result.success) {
                 return res.status(404).json({
