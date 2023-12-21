@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 import ApiUsers from "./routes/users.route";
+import ApiLogin from "./routes/auth.route";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ class Server {
         this.app.use(express.urlencoded({ extended: true }));
 
         this.app.use("/api/users", ApiUsers.routes());
+        this.app.use("/api/auth", ApiLogin.routes());
     }
 
     run() {
